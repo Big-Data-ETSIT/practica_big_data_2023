@@ -87,7 +87,7 @@ cd k8s/k8s-yamls
 Deploy all the kubernetes services and deployments
 
 ```
-kubectl apply -f red1-networkpolicy.yaml,zookeeper-service.yaml,kafka-service.yaml,mongo-service.yaml,spark-service.yaml,flask-service.yaml,zookeeper-deployment.yaml,kafka-deployment.yaml,mongo-deployment.yaml,mongo-seed-deployment.yaml,spark-deployment.yaml,flask-deployment.yaml,spark-service-web.yaml
+kubectl apply -f red1-networkpolicy.yaml,zookeeper-service.yaml,kafka-service.yaml,mongo-service.yaml,spark-service.yaml,flask-service.yaml,zookeeper-deployment.yaml,kafka-deployment.yaml,mongo-deployment.yaml,mongo-seed-deployment.yaml,spark-deployment.yaml,flask-deployment.yaml,spark-service-web.yaml,spark-cluster.yaml
 ```
 Verify the services and deployments created
 
