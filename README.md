@@ -63,12 +63,79 @@ We create an entire realtime predictive system with a web front-end to submit pr
 
 ![Predicting Flight Delays UI](images/predicting_flight_kafka_waiting.png)
 
-## Downloading Data
+## Instructions for  replicating the scenario with K8S
 
-Once the server comes up, download the data and you are ready to go. First change directory into the `practica_creativa` directory.
+Clone the repository
+```
+git clone [practica_big_data_2023](https://github.com/Big-Data-ETSIT/practica_big_data_2023)
 
 ```
-cd practica_creativa
+
+Change directory into the `practica_big_data_2023
+` directory.
+
+```
+cd practica_big_data_2023
+
+```
+
+Then go to the k8s folder to locate de yaml files with the kubernetes services
+```
+cd k8s/k8s-yamls
+
+```
+Deploy all the kubernetes services and deployments
+
+```
+kubectl apply -f red1-networkpolicy.yaml,zookeeper-service.yaml,kafka-service.yaml,mongo-service.yaml,spark-service.yaml,flask-service.yaml,zookeeper-deployment.yaml,kafka-deployment.yaml,mongo-deployment.yaml,mongo-seed-deployment.yaml,spark-deployment.yaml,flask-deployment.yaml,spark-service-web.yaml
+```
+Verify the services and deployments created
+
+```
+kubectl get svc
+kubectl get deployments
+
+```
+  Now, visit http://localhost:5000/flights/delays/predict_kafka and, for fun, open the JavaScript console. Enter a nonzero departure delay, an ISO-formatted date (I used 2016-12-25, which was in the future at the time I was writing this), a valid carrier code (use AA or DL if you don’t know one), an origin and destination (my favorite is ATL → SFO), and a valid flight number (e.g., 1519), and hit Submit. Watch the debug output in the JavaScript console as the client polls for data from the response endpoint at /flights/delays/predict/classify_realtime/response/.
+  
+  Quickly switch windows to your Spark console. Within 10 seconds, the length we’ve configured of a minibatch, you should see something like the following:
+  
+  ## Check the predictions records inserted in MongoDB
+
+  Identify  the name of the mongo pod 
+
+  ```
+  kubectl get pods
+  ```
+  
+  ```
+   
+   $ kubectl exec -it <name of the mongo pod> mongo
+   > use use agile_data_science;
+   >db.flight_delay_classification_response.find();
+  
+  ```
+  You must have a similar output as:
+  
+  ```
+  { "_id" : ObjectId("5d8dcb105e8b5622696d6f2e"), "Origin" : "ATL", "DayOfWeek" : 6, "DayOfYear" : 360, "DayOfMonth" : 25, "Dest" : "SFO", "DepDelay" : 290, "Timestamp" : ISODate("2019-09-27T08:40:48.175Z"), "FlightDate" : ISODate("2016-12-24T23:00:00Z"), "Carrier" : "AA", "UUID" : "8e90da7e-63f5-45f9-8f3d-7d948120e5a2", "Distance" : 2139, "Route" : "ATL-SFO", "Prediction" : 3 }
+  { "_id" : ObjectId("5d8dcba85e8b562d1d0f9cb8"), "Origin" : "ATL", "DayOfWeek" : 6, "DayOfYear" : 360, "DayOfMonth" : 25, "Dest" : "SFO", "DepDelay" : 291, "Timestamp" : ISODate("2019-09-27T08:43:20.222Z"), "FlightDate" : ISODate("2016-12-24T23:00:00Z"), "Carrier" : "AA", "UUID" : "d3e44ea5-d42c-4874-b5f7-e8a62b006176", "Distance" : 2139, "Route" : "ATL-SFO", "Prediction" : 3 }
+  { "_id" : ObjectId("5d8dcbe05e8b562d1d0f9cba"), "Origin" : "ATL", "DayOfWeek" : 6, "DayOfYear" : 360, "DayOfMonth" : 25, "Dest" : "SFO", "DepDelay" : 5, "Timestamp" : ISODate("2019-09-27T08:44:16.432Z"), "FlightDate" : ISODate("2016-12-24T23:00:00Z"), "Carrier" : "AA", "UUID" : "a153dfb1-172d-4232-819c-8f3687af8600", "Distance" : 2139, "Route" : "ATL-SFO", "Prediction" : 1 }
+
+
+```
+--------------------------------------------------------------------------------------------------------------------------
+
+## Instructions to replicate using local resources
+
+## Downloading Data
+
+Once the server comes up, download the data and you are ready to go. First change directory into the `practica_big_data_2023
+` directory.
+
+```
+cd practica_big_data_2023
+
 ```
 Now download the data.
 
